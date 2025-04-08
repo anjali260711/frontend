@@ -7,7 +7,7 @@ export default function Dashboard() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/admin/users')
+    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/users`)
       .then(res => {
         // ✅ Handle both array or object response safely
         if (Array.isArray(res.data)) {

@@ -1,4 +1,3 @@
-// frontend/pages/user.js
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -11,14 +10,17 @@ export default function UserForm() {
   const [verified, setVerified] = useState(false);
   const [message, setMessage] = useState('');
 
+  const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL;
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const sendOtp = async () => {
     try {
-      await axios.post('http://localhost:5000/api/user/send-otp', { mobile: form.mobile });
+      await axios.post(`${API_BASE}/api/user/send-otp`, { mobile: form.mobile });
       setOtpStage(true);
+      setMessage('');
     } catch (err) {
       setMessage('Failed to send OTP.');
     }
@@ -26,14 +28,17 @@ export default function UserForm() {
 
   const verifyOtp = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/api/user/verify-otp', {
+      const res = await axios.post(`${API_BASE}/api/user/verify-otp`, {
         mobile: form.mobile,
         otp
       });
+
       if (res.data.success) {
-        await axios.post('http://localhost:5000/api/user/save', form);
+        await axios.post(`${API_BASE}/api/user/save`, form);
         setVerified(true);
-        setMessage('Welcome! Your data has been saved.');
+        setMessage('✅ Welcome! Your data has been saved.');
+      } else {
+        setMessage('Invalid OTP.');
       }
     } catch (err) {
       setMessage('Invalid OTP.');

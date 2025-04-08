@@ -11,14 +11,14 @@ export default function AdminPage() {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/api/admin/login', {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/login`, {
         username,
-        password
+        password,
       });
 
       if (res.data.success) {
         setLoggedIn(true);
-        fetchUsers();
+        fetchUsers(); // Load users after successful login
       } else {
         alert('Invalid login');
       }
@@ -31,7 +31,7 @@ export default function AdminPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/admin/users');
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/users`);
 
       // ✅ Check if API response is an array
       if (Array.isArray(res.data)) {
